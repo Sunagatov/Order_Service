@@ -47,39 +47,39 @@ public class OrderController {
 
     @GetMapping
     @ApiOperation(value = "View the list of orders", response = Collection.class)
-    public Collection<Order> getOrders(@Valid @ApiParam(value = "An order ids which are used to retrieve orders") @RequestBody(required = false) Iterable<Long> orderIds) {
+    public Collection<Order> getOrders(@Valid @ApiParam(value = "Id list which is used to retrieve orders") @RequestBody(required = false) Iterable<Long> orderIds) {
         return this.orderService.getAll(orderIds);
     }
 
     @GetMapping(value = "/{id}")
-    @ApiOperation(value = "View the order with given id", response = OrderDTO.class)
-    public Order getOrder(@Valid @Min(0) @NotNull @ApiParam(value = "An order id which is used to retrieve an order", required = true) @PathVariable Long id) {
+    @ApiOperation(value = "View the order with given id", response = Order.class)
+    public Order getOrder(@Valid @Min(0) @NotNull @ApiParam(value = "An id which is used to retrieve an order", required = true) @PathVariable Long id) {
         return this.orderService.getById(id);
     }
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete the order with given id", response = ResponseEntity.class)
-    public ResponseEntity deleteOrder(@Valid @Min(0) @NotNull  @ApiParam(value = "An order id which is used to delete order", required = true) @PathVariable Long id) {
+    public ResponseEntity deleteOrder(@Valid @Min(0) @NotNull  @ApiParam(value = "An id which is used to delete order", required = true) @PathVariable Long id) {
         this.orderService.deleteById(id);
         return ResponseEntity.ok(String.format("The order with id=[%d] was deleted", id));
     }
 
     @DeleteMapping
     @ApiOperation(value = "Delete the orders with given ids", response = ResponseEntity.class)
-    public ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "An order ids which are used to delete orders", required = true) @RequestBody Iterable<Long> ids) {
+    public ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "Id list which is used  to delete orders", required = true) @RequestBody Iterable<Long> ids) {
         this.orderService.deleteAll(ids);
         return ResponseEntity.ok(String.format("The orders with ids=[%s] were deleted", ids));
     }
 
     @PostMapping
-    @ApiOperation(value = "Save the given order", response = ResponseEntity.class)
+    @ApiOperation(value = "Save a new order", response = ResponseEntity.class)
     public ResponseEntity saveOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be saved", required = true) @RequestBody OrderDTO order) {
         final Order orderEntity = this.orderService.save(order);
         return ResponseEntity.ok(String.format("The order [%s] was saved", orderEntity));
     }
 
     @PutMapping
-    @ApiOperation(value = "Update the given order", response = ResponseEntity.class)
+    @ApiOperation(value = "Update an existed order", response = ResponseEntity.class)
     public ResponseEntity updateOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be used to update an existed order", required = true) @RequestBody OrderDTO order) {
         final Order orderEntity = this.orderService.update(order);
         return ResponseEntity.ok(String.format("The order [%s] was updated", orderEntity));
