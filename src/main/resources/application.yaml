@@ -1,0 +1,31 @@
+server:
+  port: 8098    
+  
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/ 
+      
+spring:
+  application:
+    name: order-service    
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/order'
+    username: 'order_account'
+    password: 'order_account'
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+  banner:
+    location: 'classpath:/banner.txt'
+
