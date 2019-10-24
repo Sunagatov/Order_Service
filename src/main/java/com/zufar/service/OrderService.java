@@ -1,12 +1,11 @@
-package com.zufar.order_service.service;
+package com.zufar.service;
 
-import com.zufar.order_service.entity.Category;
-import com.zufar.order_service.entity.Order;
-import com.zufar.order_service.dto.OrderDTO;
-import com.zufar.order_service.exception.CategoryNotFoundException;
-import com.zufar.order_service.exception.OrderNotFoundException;
-import com.zufar.order_service.repository.CategoryRepository;
-import com.zufar.order_service.repository.OrderRepository;
+import com.zufar.entity.Category;
+import com.zufar.exception.OrderNotFoundException;
+import com.zufar.entity.Order;
+import com.zufar.dto.OrderDTO;
+import com.zufar.repository.CategoryRepository;
+import com.zufar.repository.OrderRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +36,7 @@ public class OrderService {
         Collection<Order> orders;
         try {
             orders = (Collection<Order>) this.orderRepository.findAll();
+            LOGGER.info("All orders were loaded from a database.");
         } catch (Exception exception) {
             final String databaseErrorMessage = "It is impossible to get all clients. There are some problems with a database.";
             LOGGER.error(databaseErrorMessage, exception);
@@ -45,12 +45,13 @@ public class OrderService {
         return orders;
     }
 
-    public Collection<Order> getAllBy(Long clientId) {
+    public Collection<Order> getAllByClientId(Long clientId) {
         Collection<Order> orders;
         try {
             orders = (Collection<Order>) this.orderRepository.findAllByClientId(clientId);
+            LOGGER.info(String.format("All orders of the client with id=[%d] were loaded from a database.", clientId));
         } catch (Exception exception) {
-            final String databaseErrorMessage = "It is impossible to get all clients. There are some problems with a database.";
+            final String databaseErrorMessage = String.format("It is impossible to get orders of the client with id=[%d]. There are some problems with a database.", clientId);
             LOGGER.error(databaseErrorMessage, exception);
             throw new OrderNotFoundException(databaseErrorMessage, exception);
         }
@@ -62,9 +63,9 @@ public class OrderService {
         Order order;
         try {
             order = this.orderRepository.findById(id).orElse(null);
+            LOGGER.info(String.format("The order with id=[%d] were loaded from a database.", id));
         } catch (Exception exception) {
-            final String databaseErrorMessage =
-                    String.format("It is impossible to get the client with id = [%d]. There are some problems with a database.", id);
+            final String databaseErrorMessage = String.format("It is impossible to get the client with id = [%d]. There are some problems with a database.", id);
             LOGGER.error(databaseErrorMessage, exception);
             throw new OrderNotFoundException(databaseErrorMessage, exception);
         }
@@ -72,37 +73,45 @@ public class OrderService {
     }
 
     public Order save(OrderDTO order) {
-        final Category category = this.categoryRepository.findById(order.getCategoryId()).orElse(null);
-        if (category == null) {
-            final String databaseErrorMessage =
-                    String.format("It is impossible to save the order - [%b]. There is no the category with id=[%d].", order, order.getCategoryId());
-            LOGGER.error(databaseErrorMessage);
-            throw new CategoryNotFoundException(databaseErrorMessage);
+        final String mainErrorMessage = String.format("It is impossible to save the order - [%b].", order);
+        final Category category;
+        try {
+            category = this.categoryRepository.findById(order.getCategoryId()).orElse(null);
+            LOGGER.info(String.format("Category [%s] was loaded from a database.", category));
+        } catch (Exception exception) {
+            final String databaseErrorMessage = mainErrorMessage +
+                    String.format("It is impossible to get the order category with id = [%d]. There are some problems with a database.", order.getCategoryId());
+            LOGGER.error(databaseErrorMessage, exception);
+            throw new OrderNotFoundException(databaseErrorMessage, exception);
         }
         final Order orderEntity = this.convertToOrder(order, category);
-        return this.orderRepository.save(orderEntity);
+        final Order result;
+        try {
+            result = this.orderRepository.save(orderEntity);
+        } catch (Exception exception) {
+            final String databaseErrorMessage = " There are some problems with a database.";
+            LOGGER.error(mainErrorMessage + databaseErrorMessage, exception);
+            throw exception;
+        }
+        LOGGER.info("All ordered were loaded from a database.");
+        return result;
     }
 
     public Order update(OrderDTO order) {
         this.isExists(order.getId());
-        final Category category = this.categoryRepository.findById(order.getCategoryId()).orElse(null);
-        if (category == null) {
-            final String databaseErrorMessage =
-                    String.format("It is impossible to update the order - [%b]. There is no the category with id=[%d].", order, order.getCategoryId());
-            LOGGER.error(databaseErrorMessage);
-            throw new CategoryNotFoundException(databaseErrorMessage);
-        }
-        final Order orderEntity = this.convertToOrder(order, category);
-        return this.orderRepository.save(orderEntity);
+        return this.save(order);
     }
 
     public void deleteById(Long id) {
         this.isExists(id);
         this.orderRepository.deleteById(id);
+        LOGGER.info(String.format("The order with id=[%d] was deleted from a database.", id));
+
     }
 
-    public void deleteAllBy(Long clientId) {
+    public void deleteAllByClientId(Long clientId) {
         this.orderRepository.deleteAllByClientId(clientId);
+        LOGGER.info(String.format("The orders with client id=[%d] was deleted from a database.", clientId));
     }
 
     private void isExists(Long id) {

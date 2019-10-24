@@ -1,10 +1,10 @@
-package com.zufar.order_service.controller;
+package com.zufar.controller;
 
-import com.zufar.order_service.dto.OrderDTO;
-import com.zufar.order_service.entity.Category;
-import com.zufar.order_service.entity.Order;
-import com.zufar.order_service.repository.CategoryRepository;
-import com.zufar.order_service.service.OrderService;
+import com.zufar.entity.Category;
+import com.zufar.dto.OrderDTO;
+import com.zufar.entity.Order;
+import com.zufar.repository.CategoryRepository;
+import com.zufar.service.OrderService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +46,8 @@ public class OrderController {
 
     @GetMapping(value = "clientId={clientId}")
     @ApiOperation(value = "View the list of orders", response = Collection.class)
-    public Collection<Order> getOrdersBy(@Valid @NotNull @ApiParam(value = "Id list which is used to retrieve orders") @PathVariable(required = false) Long clientId) {
-        return this.orderService.getAllBy(clientId);
+    public Collection<Order> getOrdersBy(@Valid @ApiParam(value = "Id list which is used to retrieve orders") @PathVariable(required = false) Long clientId) {
+        return this.orderService.getAllByClientId(clientId);
     }
 
     @GetMapping(value = "/{id}")
@@ -66,7 +66,7 @@ public class OrderController {
     @DeleteMapping(value = "orders/clientId={id}")
     @ApiOperation(value = "Delete the orders with given client id", response = ResponseEntity.class)
     public @ResponseBody  ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "Client id which is used  to delete orders", required = true) @PathVariable Long id) {
-        this.orderService.deleteAllBy(id);
+        this.orderService.deleteAllByClientId(id);
         return ResponseEntity.ok(String.format("The orders with client id=[%d] were deleted", id));
     }
 

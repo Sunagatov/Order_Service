@@ -1,4 +1,4 @@
-package com.zufar.order_service;
+package com.zufar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

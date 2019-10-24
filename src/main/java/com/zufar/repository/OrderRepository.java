@@ -1,6 +1,6 @@
-package com.zufar.order_service.repository;
+package com.zufar.repository;
 
-import com.zufar.order_service.entity.Order;
+import com.zufar.entity.Order;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

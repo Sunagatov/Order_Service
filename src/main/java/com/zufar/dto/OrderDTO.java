@@ -1,4 +1,4 @@
-package com.zufar.order_service.dto;
+package com.zufar.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 

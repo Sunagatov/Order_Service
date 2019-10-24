@@ -1,4 +1,4 @@
-package com.zufar.order_service.entity;
+package com.zufar.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 
