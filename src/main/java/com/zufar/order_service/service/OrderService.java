@@ -33,14 +33,22 @@ public class OrderService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Collection<Order> getAll(Iterable<Long> ids) {
+    public Collection<Order> getAll() {
         Collection<Order> orders;
         try {
-            if (ids == null) {
-                orders = (Collection<Order>) this.orderRepository.findAll();
-            } else {
-                orders = (Collection<Order>) this.orderRepository.findAllById(ids);
-            }
+            orders = (Collection<Order>) this.orderRepository.findAll();
+        } catch (Exception exception) {
+            final String databaseErrorMessage = "It is impossible to get all clients. There are some problems with a database.";
+            LOGGER.error(databaseErrorMessage, exception);
+            throw new OrderNotFoundException(databaseErrorMessage, exception);
+        }
+        return orders;
+    }
+
+    public Collection<Order> getAllBy(Long clientId) {
+        Collection<Order> orders;
+        try {
+            orders = (Collection<Order>) this.orderRepository.findAllByClientId(clientId);
         } catch (Exception exception) {
             final String databaseErrorMessage = "It is impossible to get all clients. There are some problems with a database.";
             LOGGER.error(databaseErrorMessage, exception);
@@ -66,7 +74,7 @@ public class OrderService {
     public Order save(OrderDTO order) {
         final Category category = this.categoryRepository.findById(order.getCategoryId()).orElse(null);
         if (category == null) {
-            final String databaseErrorMessage = 
+            final String databaseErrorMessage =
                     String.format("It is impossible to save the order - [%b]. There is no the category with id=[%d].", order, order.getCategoryId());
             LOGGER.error(databaseErrorMessage);
             throw new CategoryNotFoundException(databaseErrorMessage);
@@ -93,9 +101,8 @@ public class OrderService {
         this.orderRepository.deleteById(id);
     }
 
-    public void deleteAll(Iterable<Long> ids) {
-        final Iterable<Order> orders = this.orderRepository.findAllById(ids);
-        this.orderRepository.deleteAll(orders);
+    public void deleteAllBy(Long clientId) {
+        this.orderRepository.deleteAllByClientId(clientId);
     }
 
     private void isExists(Long id) {

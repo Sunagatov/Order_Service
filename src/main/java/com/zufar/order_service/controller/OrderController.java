@@ -14,14 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -47,47 +40,53 @@ public class OrderController {
 
     @GetMapping
     @ApiOperation(value = "View the list of orders", response = Collection.class)
-    public Collection<Order> getOrders(@Valid @ApiParam(value = "Id list which is used to retrieve orders") @RequestBody(required = false) Iterable<Long> orderIds) {
-        return this.orderService.getAll(orderIds);
+    public Collection<Order> getOrders() {
+        return this.orderService.getAll();
+    }
+
+    @GetMapping(value = "clientId={clientId}")
+    @ApiOperation(value = "View the list of orders", response = Collection.class)
+    public Collection<Order> getOrdersBy(@Valid @NotNull @ApiParam(value = "Id list which is used to retrieve orders") @PathVariable(required = false) Long clientId) {
+        return this.orderService.getAllBy(clientId);
     }
 
     @GetMapping(value = "/{id}")
     @ApiOperation(value = "View the order with given id", response = Order.class)
-    public Order getOrder(@Valid @Min(0) @NotNull @ApiParam(value = "An id which is used to retrieve an order", required = true) @PathVariable Long id) {
+    public @ResponseBody  Order getOrder(@Valid @Min(0) @NotNull @ApiParam(value = "An id which is used to retrieve an order", required = true) @PathVariable Long id) {
         return this.orderService.getById(id);
     }
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete the order with given id", response = ResponseEntity.class)
-    public ResponseEntity deleteOrder(@Valid @Min(0) @NotNull  @ApiParam(value = "An id which is used to delete order", required = true) @PathVariable Long id) {
+    public @ResponseBody  ResponseEntity deleteOrder(@Valid @Min(0) @NotNull  @ApiParam(value = "An id which is used to delete order", required = true) @PathVariable Long id) {
         this.orderService.deleteById(id);
         return ResponseEntity.ok(String.format("The order with id=[%d] was deleted", id));
     }
 
-    @DeleteMapping
-    @ApiOperation(value = "Delete the orders with given ids", response = ResponseEntity.class)
-    public ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "Id list which is used  to delete orders", required = true) @RequestBody Iterable<Long> ids) {
-        this.orderService.deleteAll(ids);
-        return ResponseEntity.ok(String.format("The orders with ids=[%s] were deleted", ids));
+    @DeleteMapping(value = "orders/clientId={id}")
+    @ApiOperation(value = "Delete the orders with given client id", response = ResponseEntity.class)
+    public @ResponseBody  ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "Client id which is used  to delete orders", required = true) @PathVariable Long id) {
+        this.orderService.deleteAllBy(id);
+        return ResponseEntity.ok(String.format("The orders with client id=[%d] were deleted", id));
     }
 
     @PostMapping
     @ApiOperation(value = "Save a new order", response = ResponseEntity.class)
-    public ResponseEntity saveOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be saved", required = true) @RequestBody OrderDTO order) {
+    public @ResponseBody ResponseEntity saveOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be saved", required = true) @RequestBody OrderDTO order) {
         final Order orderEntity = this.orderService.save(order);
         return ResponseEntity.ok(String.format("The order [%s] was saved", orderEntity));
     }
 
     @PutMapping
     @ApiOperation(value = "Update an existed order", response = ResponseEntity.class)
-    public ResponseEntity updateOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be used to update an existed order", required = true) @RequestBody OrderDTO order) {
+    public @ResponseBody ResponseEntity updateOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be used to update an existed order", required = true) @RequestBody OrderDTO order) {
         final Order orderEntity = this.orderService.update(order);
         return ResponseEntity.ok(String.format("The order [%s] was updated", orderEntity));
     }
 
     @GetMapping(value = "categories")
     @ApiOperation(value = "View the list of categories", response = Iterable.class)
-    public Iterable<Category> getCategories() {
+    public @ResponseBody Iterable<Category> getCategories() {
         return this.categoryRepository.findAll();
     }
 }
