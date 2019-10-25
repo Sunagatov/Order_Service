@@ -1,34 +1,37 @@
 package com.zufar.dto;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Api("Order")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class OrderDTO {
 
-    @ApiModelProperty(notes = "order id", name="id")
+    @ApiModelProperty(notes = "Order id", name = "id")
     private Long id;
 
-    @ApiModelProperty(notes = "goods name of an order", name="goodsName", required=true)
-    @NotEmpty(message = "Please provide an order's goods name. It is empty")
-    @NotNull(message = "Please provide an order' goods name")
-    @Size(min = 5, max = 160, message = "Name length should be from 5 to 160")
+    @ApiModelProperty(notes = "Goods name in an order", name = "goodsName", required = true)
+    @NotEmpty(message = "Please provide a goods name in an order. It is empty.")
+    @NotNull(message = "Please provide a goods name in an order. It is absent.")
+    @Size(min = 5, max = 160, message = "Goods name length in an order should be from 5 to 160.")
     private String goodsName;
 
-    @ApiModelProperty(notes = "category id of an order", name="category_id", required=true)
-    @NotNull(message = "Please provide an order's category id")
+    @ApiModelProperty(notes = "Goods category id in an order", name = "category_id", required = true)
+    @NotNull(message = "Please provide a category id in a order. It is absent.")
     private Long categoryId;
 
-    @ApiModelProperty(notes = "client id of an order", name="clientId", required=true)
-    @NotNull(message = "Please provide an order client's id")
+    @ApiModelProperty(notes = "client id of an order", name = "clientId", required = true)
+    @NotNull(message = "Please provide a client id in a order.")
     private Long clientId;
 }
