@@ -93,7 +93,7 @@ public class OrderService {
             result = this.orderRepository.save(orderEntity);
             LOGGER.info(String.format("The order [%s] was saved in a database.",result));
         } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to save the order - [%b]. There are some problems with a database.", order);
+            String errorMessage = String.format("It is impossible to save the order - [%s]. There are some problems with a database.", order);
             LOGGER.error(errorMessage, exception);
             throw exception;
         }
@@ -109,7 +109,7 @@ public class OrderService {
             result = this.orderRepository.save(orderEntity);
             LOGGER.info(String.format("The order [%s] was updated in a database.", result));
         } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to updated the order - [%b]. There are some problems with a database.", order);
+            String errorMessage = String.format("It is impossible to updated the order - [%s]. There are some problems with a database.", order);
             LOGGER.error(errorMessage, exception);
             throw exception;
         }
