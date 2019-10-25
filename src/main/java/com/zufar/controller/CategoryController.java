@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@Api(value = "Category",
+@Api(value = "Category api",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
@@ -37,7 +37,7 @@ public class CategoryController {
 
     @ApiOperation(value = "View a list of order categories.", response = Category.class, responseContainer = "List")
     @GetMapping
-    public List<Category> getCategories() {
+    public @ResponseBody List<Category> getCategories() {
         return this.categoryService.getAll();
     }
 

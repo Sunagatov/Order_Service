@@ -1,9 +1,7 @@
 package com.zufar.controller;
 
-import com.zufar.entity.Category;
 import com.zufar.dto.OrderDTO;
 import com.zufar.entity.Order;
-import com.zufar.repository.CategoryRepository;
 import com.zufar.service.OrderService;
 
 import io.swagger.annotations.Api;
@@ -13,80 +11,89 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-@Api(value = "orders")
+@Api(value = "Order api",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
 @RestController
-@RequestMapping(value = "orders", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "orders", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 public class OrderController {
 
     private final OrderService orderService;
-    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public OrderController(OrderService orderService,
-                           CategoryRepository categoryRepository) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.categoryRepository = categoryRepository;
     }
 
+    @ApiOperation(value = "View the order list.", response = Order.class, responseContainer = "List")
     @GetMapping
-    @ApiOperation(value = "View the list of orders", response = Collection.class)
-    public Collection<Order> getOrders() {
+    public @ResponseBody List<Order> getOrders() {
         return this.orderService.getAll();
     }
 
-    @GetMapping(value = "clientId={clientId}")
-    @ApiOperation(value = "View the list of orders", response = Collection.class)
-    public Collection<Order> getOrdersBy(@Valid @ApiParam(value = "Id list which is used to retrieve orders") @PathVariable(required = false) Long clientId) {
+    @ApiOperation(value = "View the order list of the client with given client id.", response = Order.class, responseContainer = "List")
+    @GetMapping(value = "client/{clientId}")
+    public @ResponseBody List<Order> getOrdersByClientId(@ApiParam(value = "A client id which is used to retrieve order list of this client.", required = true) @PathVariable Long clientId) {
         return this.orderService.getAllByClientId(clientId);
     }
 
+    @ApiOperation(value = "View the order list with given order ids.", response = Order.class, responseContainer = "List")
+    @GetMapping
+    public @ResponseBody List<Order> getOrdersByIds(@ApiParam(value = "Order ids which are used to retrieve order list.", required = true) @RequestBody Set<Long> ids) {
+        return this.orderService.getAllByIds(ids);
+    }
+
+    @ApiOperation(value = "View the order with given order id.", response = Order.class)
     @GetMapping(value = "/{id}")
-    @ApiOperation(value = "View the order with given id", response = Order.class)
-    public @ResponseBody  Order getOrder(@Valid @Min(0) @NotNull @ApiParam(value = "An id which is used to retrieve an order", required = true) @PathVariable Long id) {
+    public @ResponseBody Order getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {
         return this.orderService.getById(id);
     }
 
+    @ApiOperation(value = "Delete the order with given order id.", response = ResponseEntity.class)
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete the order with given id", response = ResponseEntity.class)
-    public @ResponseBody  ResponseEntity deleteOrder(@Valid @Min(0) @NotNull  @ApiParam(value = "An id which is used to delete order", required = true) @PathVariable Long id) {
+    public @ResponseBody ResponseEntity deleteOrder(@ApiParam(value = "An order id which is used to delete an order.", required = true) @PathVariable Long id) {
         this.orderService.deleteById(id);
-        return ResponseEntity.ok(String.format("The order with id=[%d] was deleted", id));
+        return ResponseEntity.ok(String.format("The order with the given order id=[%d] was deleted.", id));
     }
 
-    @DeleteMapping(value = "orders/clientId={id}")
-    @ApiOperation(value = "Delete the orders with given client id", response = ResponseEntity.class)
-    public @ResponseBody  ResponseEntity deleteOrders(@Valid @NotNull @ApiParam(value = "Client id which is used  to delete orders", required = true) @PathVariable Long id) {
-        this.orderService.deleteAllByClientId(id);
-        return ResponseEntity.ok(String.format("The orders with client id=[%d] were deleted", id));
+    @ApiOperation(value = "Delete the orders of the client with given client id.", response = ResponseEntity.class)
+    @DeleteMapping(value = "client/{clientId}")
+    public @ResponseBody ResponseEntity deleteOrders(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @PathVariable Long clientId) {
+        this.orderService.deleteAllByClientId(clientId);
+        return ResponseEntity.ok(String.format("The orders of the client with given client id=[%d] were deleted.", clientId));
     }
 
+    @ApiOperation(value = "Save a new order.", response = ResponseEntity.class)
     @PostMapping
-    @ApiOperation(value = "Save a new order", response = ResponseEntity.class)
-    public @ResponseBody ResponseEntity saveOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be saved", required = true) @RequestBody OrderDTO order) {
-        final Order orderEntity = this.orderService.save(order);
-        return ResponseEntity.ok(String.format("The order [%s] was saved", orderEntity));
+    public @ResponseBody ResponseEntity saveOrder(@ApiParam(value = "An order object which which will be saved.", required = true) @Valid @RequestBody OrderDTO order) {
+        Order orderEntity = this.orderService.save(order);
+        return ResponseEntity.ok(String.format("The order [%s] was saved.", orderEntity));
     }
 
+
+    @ApiOperation(value = "Update an existed order.", response = ResponseEntity.class)
     @PutMapping
-    @ApiOperation(value = "Update an existed order", response = ResponseEntity.class)
-    public @ResponseBody ResponseEntity updateOrder(@Valid @NotNull @ApiParam(value = "An order object which which will be used to update an existed order", required = true) @RequestBody OrderDTO order) {
-        final Order orderEntity = this.orderService.update(order);
-        return ResponseEntity.ok(String.format("The order [%s] was updated", orderEntity));
-    }
-
-    @GetMapping(value = "categories")
-    @ApiOperation(value = "View the list of categories", response = Iterable.class)
-    public @ResponseBody Iterable<Category> getCategories() {
-        return this.categoryRepository.findAll();
+    public @ResponseBody ResponseEntity updateOrder(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @Valid @RequestBody OrderDTO order) {
+        Order orderEntity = this.orderService.update(order);
+        return ResponseEntity.ok(String.format("The order [%s] was updated.", orderEntity));
     }
 }
