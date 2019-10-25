@@ -33,7 +33,7 @@ public class CategoryService {
             categories = (List<Category>) this.categoryRepository.findAll();
             LOGGER.info("All categories were loaded from a database.");
         } catch (Exception exception) {
-            final String databaseErrorMessage = "It is impossible to get all categories. There are some problems with a database.";
+            String databaseErrorMessage = "It is impossible to get all categories. There are some problems with a database.";
             LOGGER.error(databaseErrorMessage, exception);
             throw exception;
         } 
@@ -47,7 +47,7 @@ public class CategoryService {
             category = this.categoryRepository.findById(id).orElse(null);
             LOGGER.info(String.format("The category with id=[%d] were loaded from a database.", id));
         } catch (Exception exception) {
-            final String databaseErrorMessage = String.format("It is impossible to get the client with id = [%d]. There are some problems with a database.", id);
+            String databaseErrorMessage = String.format("It is impossible to get the client with id = [%d]. There are some problems with a database.", id);
             LOGGER.error(databaseErrorMessage, exception);
             throw exception;
         }
@@ -56,7 +56,7 @@ public class CategoryService {
 
     private void isExists(Long id) {
         if (!this.categoryRepository.existsById(id)) {
-            final String errorMessage = String.format("The category with id = [%d] not found.", id);
+            String errorMessage = String.format("The category with id = [%d] not found.", id);
             LOGGER.error(errorMessage);
             throw new CategoryNotFoundException(errorMessage);
         }
