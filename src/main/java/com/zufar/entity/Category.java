@@ -1,6 +1,6 @@
 package com.zufar.entity;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.Data;
@@ -15,7 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.GenerationType;
 
-@Api("Order category")
+@ApiModel("Order category")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

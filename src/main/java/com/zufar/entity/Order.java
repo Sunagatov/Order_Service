@@ -1,6 +1,6 @@
 package com.zufar.entity;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.Data;
@@ -22,7 +22,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
 
 
-@Api("Order")
+@ApiModel(value = "Order")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
