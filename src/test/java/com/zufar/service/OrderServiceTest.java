@@ -4,7 +4,6 @@ package com.zufar.service;
 import com.zufar.dto.OrderDTO;
 import com.zufar.entity.Category;
 import com.zufar.entity.Order;
-import com.zufar.exception.CategoryNotFoundException;
 import com.zufar.exception.OrderNotFoundException;
 import com.zufar.repository.OrderRepository;
 
@@ -20,7 +19,6 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +46,6 @@ public class OrderServiceTest {
     private static final Long invalidOrderId = 343L;
     private static final Long clientId = 1L;
     private static final Long categoryId = 1L;
-    private static final Long invalidCategoryId = 3435L;
     private static final List<Order> orders = new ArrayList<>();
     private static final Set<Long> orderIds = new HashSet<>();
     private static final Category category = new Category(categoryId, "categoryName2");
@@ -68,8 +65,8 @@ public class OrderServiceTest {
     public void whenGetAllCalledThenCollectionShouldBeReturned() {
         when(orderRepository.findAll()).thenReturn(orders);
 
-        Collection<Order> expected = orders;
-        Collection<Order> actual = this.orderService.getAll();
+        List<Order> expected = orders;
+        List<Order> actual = this.orderService.getAll();
 
         verify(orderRepository, times(1)).findAll();
         assertNotNull(actual);
@@ -80,8 +77,8 @@ public class OrderServiceTest {
     public void whenGetAllByClientIdCalledThenCollectionShouldBeReturned() {
         when(orderRepository.findAllByClientId(clientId)).thenReturn(orders);
 
-        Collection<Order> expected = orders;
-        Collection<Order> actual = this.orderService.getAllByClientId(clientId);
+        List<Order> expected = orders;
+        List<Order> actual = this.orderService.getAllByClientId(clientId);
 
         verify(orderRepository, times(1)).findAllByClientId(clientId);
         assertNotNull(actual);
@@ -92,8 +89,8 @@ public class OrderServiceTest {
     public void whenGetAllByIdsCalledThenCollectionShouldBeReturned() {
         when(orderRepository.findAllById(orderIds)).thenReturn(orders);
 
-        Collection<Order> expected = orders;
-        Collection<Order> actual = this.orderService.getAllByIds(orderIds);
+        List<Order> expected = orders;
+        List<Order> actual = this.orderService.getAllByIds(orderIds);
 
         verify(orderRepository, times(1)).findAllById(orderIds);
         assertNotNull(actual);
