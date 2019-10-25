@@ -21,22 +21,4 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build().apiInfo(apiEndPointsInfo());
-    }
-    
-    private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder()
-                .title("Order REST API")
-                .description("Order REST API provides api for working with orders")
-                .contact(new Contact("Zufar Sunagatov", "https://vk.com/person99", "zufar.sunagatov@gmail.com"))
-                .version("1.0.0")
-                .build();
-    }
 }
