@@ -8,9 +8,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,14 +40,14 @@ public class CategoryController {
 
     @ApiOperation(value = "View a list of order categories.", response = Category.class, responseContainer = "List")
     @GetMapping
-    public @ResponseBody List<Category> getCategories() {
-        return this.categoryService.getAll();
+    public @ResponseBody ResponseEntity<List<Category>> getCategories() {
+        return new ResponseEntity<>(this.categoryService.getAll(), HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "View the category with given id.", response = Order.class)
     @GetMapping(value = "/{id}")
-    public @ResponseBody Category getCategory(@ApiParam(value = "An id which is used to retrieve an order category.", required = true) @PathVariable Long id) {
-        return this.categoryService.getById(id);
+    public @ResponseBody ResponseEntity<Category> getCategory(@ApiParam(value = "An id which is used to retrieve an order category.", required = true) @PathVariable Long id) {
+        return new ResponseEntity<>(this.categoryService.getById(id), HttpStatus.OK);
     }
 }

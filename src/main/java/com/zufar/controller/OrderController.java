@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 
 import java.util.List;
-import java.util.Set;
 
 @Api(value = "Order api",
         consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -45,27 +45,27 @@ public class OrderController {
     }
 
     @ApiOperation(value = "View the order list.", response = Order.class, responseContainer = "List")
-    @GetMapping
-    public @ResponseBody List<Order> getOrders() {
-        return this.orderService.getAll();
+    @GetMapping(value = "all")
+    public @ResponseBody ResponseEntity<List<Order>> getOrders() {
+        return new ResponseEntity<>(this.orderService.getAll(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "View the order list of the client with given client id.", response = Order.class, responseContainer = "List")
     @GetMapping(value = "client/{clientId}")
-    public @ResponseBody List<Order> getOrdersByClientId(@ApiParam(value = "A client id which is used to retrieve order list of this client.", required = true) @PathVariable Long clientId) {
-        return this.orderService.getAllByClientId(clientId);
+    public @ResponseBody  ResponseEntity<List<Order>>  getOrdersByClientId(@ApiParam(value = "A client id which is used to retrieve order list of this client.", required = true) @PathVariable Long clientId) {
+        return new ResponseEntity<>(this.orderService.getAllByClientId(clientId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "View the order list with given order ids.", response = Order.class, responseContainer = "List")
-    @GetMapping
-    public @ResponseBody List<Order> getOrdersByIds(@ApiParam(value = "Order ids which are used to retrieve order list.", required = true) @RequestBody Set<Long> ids) {
-        return this.orderService.getAllByIds(ids);
+    @PostMapping(value = "client")
+    public @ResponseBody List<Order> getOrdersByIds(@ApiParam(value = "An order client id which is used to get orders.", required = true) @RequestBody List<Long> orderIds) {
+        return this.orderService.getAllByIds(orderIds);
     }
 
     @ApiOperation(value = "View the order with given order id.", response = Order.class)
     @GetMapping(value = "/{id}")
-    public @ResponseBody Order getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {
-        return this.orderService.getById(id);
+    public @ResponseBody ResponseEntity<Order> getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {
+        return new ResponseEntity<>(this.orderService.getById(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete the order with given order id.", response = ResponseEntity.class)
