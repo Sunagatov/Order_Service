@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
-    void deleteAllByClientId(Long clientId);
+    boolean existsByClientId(Long clientId);
     Iterable<Order> findAllByClientId(Long clientId);
+    void deleteAllByClientId(Long clientId);
 }

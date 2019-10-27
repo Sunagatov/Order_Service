@@ -52,8 +52,8 @@ public class OrderController {
 
     @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List")
     @PostMapping(value = "client")
-    public @ResponseBody List<OrderDTO> getOrdersByIds(@ApiParam(value = "An order client id which is used to get orders.", required = true) @RequestBody List<Long> orderIds) {
-        return this.orderService.getAllByIds(orderIds);
+    public @ResponseBody List<OrderDTO> getOrdersByClientId(@ApiParam(value = "An order client id which is used to get orders.", required = true) @RequestBody Long clientId) {
+        return this.orderService.getAllByClientId(clientId);
     }
 
     @ApiOperation(value = "View the order with given order id.", response = OrderDTO.class)
