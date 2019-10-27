@@ -11,11 +11,5 @@
             <column name="goods_name" value="goods_name1" type="VARCHAR(160)"/>
             <column name="category_id" value="1" type="bigint"/>
         </insert>
-        <insert tableName="orders">
-            <column name="id" valueNumeric="2" type="bigint"/>
-            <column name="client_id" value="2" type="bigint"/>
-            <column name="goods_name" value="goods_name2" type="VARCHAR(160)"/>
-            <column name="category_id" value="2" type="bigint"/>
-        </insert>
     </changeSet>
 </databaseChangeLog>
