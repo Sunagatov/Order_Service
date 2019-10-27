@@ -1,6 +1,7 @@
 package com.zufar.service;
 
 
+import com.zufar.dto.CategoryDTO;
 import com.zufar.entity.Category;
 import com.zufar.exception.CategoryNotFoundException;
 import com.zufar.exception.OrderNotFoundException;
@@ -36,22 +37,26 @@ public class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     private static final Long categoryId = 1L;
-    private static final Long invalidCategoryId = 3435L;
+    
     private static final List<Category> categories = new ArrayList<>();
+    private static final List<CategoryDTO> categoryDTOs = new ArrayList<>();
+
     private static final Category category = new Category(categoryId, "categoryName2");
+    private static final CategoryDTO categoryDTO = new CategoryDTO(categoryId, "categoryName2");
 
 
     @BeforeClass
     public static void setUp() {
         categories.add(category);
+        categoryDTOs.add(categoryDTO);
     }
 
     @Test
     public void whenGetAllCalledThenCollectionShouldBeReturned() {
         when(categoryRepository.findAll()).thenReturn(categories);
 
-        List<Category> expected = categories;
-        List<Category> actual = this.categoryService.getAll();
+        List<CategoryDTO> expected = categoryDTOs;
+        List<CategoryDTO> actual = this.categoryService.getAll();
 
         verify(categoryRepository, times(1)).findAll();
         assertNotNull(actual);
@@ -62,23 +67,13 @@ public class CategoryServiceTest {
     @Test
     public void whenGetByIdCalledThenOrderShouldBeReturned() {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        when(categoryRepository.existsById(categoryId)).thenReturn(true);
 
-
-        Category expected = category;
-        Category actual = this.categoryService.getById(categoryId);
+        CategoryDTO expected = categoryDTO;
+        CategoryDTO actual = this.categoryService.getById(categoryId);
 
         verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryRepository, times(1)).existsById(categoryId);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
-    }
-
-    @Test(expected = CategoryNotFoundException.class)
-    public void whenGetByIdWithInvalidIdThenOrderNotFoundExceptionShouldThrow() {
-        when(categoryRepository.existsById(invalidCategoryId)).thenReturn(false);
-
-        categoryService.getById(invalidCategoryId);
     }
 }

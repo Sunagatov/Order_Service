@@ -1,7 +1,6 @@
 package com.zufar.controller;
 
-import com.zufar.entity.Category;
-import com.zufar.entity.Order;
+import com.zufar.dto.CategoryDTO;
 import com.zufar.service.CategoryService;
 
 import io.swagger.annotations.Api;
@@ -38,16 +37,16 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @ApiOperation(value = "View a list of order categories.", response = Category.class, responseContainer = "List")
+    @ApiOperation(value = "View a list of order categories.", response = CategoryDTO.class, responseContainer = "List")
     @GetMapping
-    public @ResponseBody ResponseEntity<List<Category>> getCategories() {
+    public @ResponseBody ResponseEntity<List<CategoryDTO>> getCategories() {
         return new ResponseEntity<>(this.categoryService.getAll(), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "View the category with given id.", response = Order.class)
+    @ApiOperation(value = "View the category with given id.", response = CategoryDTO.class)
     @GetMapping(value = "/{id}")
-    public @ResponseBody ResponseEntity<Category> getCategory(@ApiParam(value = "An id which is used to retrieve an order category.", required = true) @PathVariable Long id) {
+    public @ResponseBody ResponseEntity<CategoryDTO> getCategory(@ApiParam(value = "An id which is used to retrieve an order category.", required = true) @PathVariable Long id) {
         return new ResponseEntity<>(this.categoryService.getById(id), HttpStatus.OK);
     }
 }

@@ -1,22 +1,23 @@
 package com.zufar.service;
 
-import com.zufar.entity.Order;
 import com.zufar.dto.OrderDTO;
 import com.zufar.entity.Category;
+import com.zufar.entity.Order;
+import com.zufar.dto.OrderInput;
+import com.zufar.dto.CategoryDTO;
 import com.zufar.repository.OrderRepository;
-import com.zufar.exception.OrderNotFoundException;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
-@Transactional
 public class OrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
@@ -31,126 +32,66 @@ public class OrderService {
         this.categoryService = categoryService;
     }
 
-    public List<Order> getAll() {
-        List<Order> orders;
-        try {
-            orders = (List<Order>) this.orderRepository.findAll();
-        } catch (Exception exception) {
-            String databaseErrorMessage = "It is impossible to get all orders. There are some problems with a database.";
-            LOGGER.error(databaseErrorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info("All orders were loaded from a database.");
-        return orders;
+    public List<OrderDTO> getAll() {
+        LOGGER.info("Get all orders.");
+        return StreamSupport.stream(orderRepository.findAll().spliterator(), false)
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Order> getAllByIds(List<Long> ids) {
-        List<Order> orders;
-        try {
-            orders = (List<Order>) this.orderRepository.findAllById(ids);
-        } catch (Exception exception) {
-            String databaseErrorMessage = String.format("It is impossible to get orders with ids=[%s]. There are some problems with a database.", ids);
-            LOGGER.error(databaseErrorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info("All orders were loaded from a database.");
-        return orders;
+    public List<OrderDTO> getAllByIds(List<Long> ids) {
+        LOGGER.info(String.format("Get all orders with ids=[%s]. There are some problems with a database.", ids));
+        return StreamSupport.stream(orderRepository.findAllById(ids).spliterator(), false)
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Order> getAllByClientId(Long clientId) {
-        List<Order> orders;
-        try {
-            orders = (List<Order>) this.orderRepository.findAllByClientId(clientId);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to get orders of the client with id=[%d]. There are some problems with a database.", clientId);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info(String.format("All orders of the client with id=[%d] were loaded from a database.", clientId));
-        return orders;
+    public OrderDTO getById(Long id) {
+        LOGGER.info(String.format("Get order with id=[%d]", id));
+        return orderRepository.findById(id).map(this::convertToOrderDTO).orElse(null);
     }
 
-    public Order getById(Long id) {
-        this.isExists(id);
-        Order order;
-        try {
-            order = this.orderRepository.findById(id).orElse(null);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to get the order with id = [%d]. There are some problems with a database.", id);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info(String.format("The order with id=[%d] was loaded from a database.", id));
-        return order;
+    public OrderDTO save(OrderInput order) {
+        Order orderEntity = convertToOrder(order);
+        orderEntity = this.orderRepository.save(orderEntity);
+        LOGGER.info(String.format("Order=[%s] was saved in a database successfully.", orderEntity));
+        return convertToOrderDTO(orderEntity);
     }
 
-    public Order save(OrderDTO order) {
-        Order orderEntity = this.convertToOrder(order);
-        Order result;
-        try {
-            result = this.orderRepository.save(orderEntity);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to save the order - [%s]. There are some problems with a database.", order);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info(String.format("The order [%s] was saved in a database.", result));
-        return result;
-    }
-
-    public Order update(OrderDTO order) {
-        this.isExists(order.getId());
-        Order orderEntity = this.convertToOrder(order);
-        Order result;
-        try {
-            result = this.orderRepository.save(orderEntity);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to updated the order - [%s]. There are some problems with a database.", order);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info(String.format("The order [%s] was updated in a database.", result));
-        return result;
+    public OrderDTO update(OrderInput order) {
+        Order orderEntity = convertToOrder(order);
+        orderEntity = this.orderRepository.save(orderEntity);
+        LOGGER.info(String.format("Order=[%s] was updated in a database successfully.", orderEntity));
+        return convertToOrderDTO(orderEntity);
     }
 
     public void deleteById(Long id) {
-        this.isExists(id);
-        try {
-            this.orderRepository.deleteById(id);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to delete the order with id=[%d]. There are some problems with a database.", id);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
-        LOGGER.info(String.format("The order with id=[%d] was deleted from a database.", id));
+        this.orderRepository.deleteById(id);
+        LOGGER.info(String.format("Order with id=[%d] was deleted successfully.", id));
     }
 
     public void deleteAllByClientId(Long clientId) {
-        try {
-            this.orderRepository.deleteAllByClientId(clientId);
-        } catch (Exception exception) {
-            String errorMessage = String.format("It is impossible to delete orders with client id=[%d]. There are some problems with a database.", clientId);
-            LOGGER.error(errorMessage, exception);
-            throw exception;
-        }
+        this.orderRepository.deleteAllByClientId(clientId);
         LOGGER.info(String.format("The orders with client id=[%d] was deleted from a database.", clientId));
     }
 
-    private void isExists(Long id) {
-        if (!this.orderRepository.existsById(id)) {
-            String errorMessage = String.format("The order with id = [%d] not found.", id);
-            LOGGER.error(errorMessage);
-            throw new OrderNotFoundException(errorMessage);
-        }
-    }
-
-    private Order convertToOrder(OrderDTO orderDTO) {
-        Category category = this.categoryService.getById(orderDTO.getCategoryId());
+    private Order convertToOrder(OrderInput orderDTO) {
+        CategoryDTO category = this.categoryService.getById(orderDTO.getCategoryId());
         return new Order(
                 orderDTO.getId(),
                 orderDTO.getGoodsName(),
-                category,
+                CategoryService.convertCategory(category),
                 orderDTO.getClientId()
+        );
+    }
+
+    private OrderDTO convertToOrderDTO(Order order) {
+        Category category = order.getCategory();
+        return new OrderDTO(
+                order.getId(),
+                order.getGoodsName(),
+                CategoryService.convertCategoryDTO(category),
+                order.getClientId()
         );
     }
 }

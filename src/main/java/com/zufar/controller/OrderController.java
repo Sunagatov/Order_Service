@@ -1,7 +1,7 @@
 package com.zufar.controller;
 
 import com.zufar.dto.OrderDTO;
-import com.zufar.entity.Order;
+import com.zufar.dto.OrderInput;
 import com.zufar.service.OrderService;
 
 import io.swagger.annotations.Api;
@@ -44,27 +44,21 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @ApiOperation(value = "View the order list.", response = Order.class, responseContainer = "List")
+    @ApiOperation(value = "View the order list.", response = OrderDTO.class, responseContainer = "List")
     @GetMapping(value = "all")
-    public @ResponseBody ResponseEntity<List<Order>> getOrders() {
+    public @ResponseBody ResponseEntity<List<OrderDTO>> getOrders() {
         return new ResponseEntity<>(this.orderService.getAll(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "View the order list of the client with given client id.", response = Order.class, responseContainer = "List")
-    @GetMapping(value = "client/{clientId}")
-    public @ResponseBody  ResponseEntity<List<Order>>  getOrdersByClientId(@ApiParam(value = "A client id which is used to retrieve order list of this client.", required = true) @PathVariable Long clientId) {
-        return new ResponseEntity<>(this.orderService.getAllByClientId(clientId), HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "View the order list with given order ids.", response = Order.class, responseContainer = "List")
+    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List")
     @PostMapping(value = "client")
-    public @ResponseBody List<Order> getOrdersByIds(@ApiParam(value = "An order client id which is used to get orders.", required = true) @RequestBody List<Long> orderIds) {
+    public @ResponseBody List<OrderDTO> getOrdersByIds(@ApiParam(value = "An order client id which is used to get orders.", required = true) @RequestBody List<Long> orderIds) {
         return this.orderService.getAllByIds(orderIds);
     }
 
-    @ApiOperation(value = "View the order with given order id.", response = Order.class)
+    @ApiOperation(value = "View the order with given order id.", response = OrderDTO.class)
     @GetMapping(value = "/{id}")
-    public @ResponseBody ResponseEntity<Order> getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {
+    public @ResponseBody ResponseEntity<OrderDTO> getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {
         return new ResponseEntity<>(this.orderService.getById(id), HttpStatus.OK);
     }
 
@@ -84,16 +78,16 @@ public class OrderController {
 
     @ApiOperation(value = "Save a new order.", response = ResponseEntity.class)
     @PostMapping
-    public @ResponseBody ResponseEntity saveOrder(@ApiParam(value = "An order object which which will be saved.", required = true) @Valid @RequestBody OrderDTO order) {
-        Order orderEntity = this.orderService.save(order);
+    public @ResponseBody ResponseEntity saveOrder(@ApiParam(value = "An order object which which will be saved.", required = true) @Valid @RequestBody OrderInput order) {
+        OrderDTO orderEntity = this.orderService.save(order);
         return ResponseEntity.ok(String.format("The order [%s] was saved.", orderEntity));
     }
 
 
     @ApiOperation(value = "Update an existed order.", response = ResponseEntity.class)
     @PutMapping
-    public @ResponseBody ResponseEntity updateOrder(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @Valid @RequestBody OrderDTO order) {
-        Order orderEntity = this.orderService.update(order);
+    public @ResponseBody ResponseEntity updateOrder(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @Valid @RequestBody OrderInput order) {
+        OrderDTO orderEntity = this.orderService.update(order);
         return ResponseEntity.ok(String.format("The order [%s] was updated.", orderEntity));
     }
 }
