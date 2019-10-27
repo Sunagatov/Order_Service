@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="sunagatovzr" id="1572125875124-1">
+        <createSequence sequenceName="category_seq"/>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-2">
+        <createSequence sequenceName="order_seq"/>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-3">
+        <createTable tableName="categories">
+            <column name="id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-4">
+        <createTable tableName="orders">
+            <column name="id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="goods_name" type="VARCHAR(160)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-5">
+        <addPrimaryKey columnNames="id" constraintName="categories_pkey" tableName="categories"/>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-6">
+        <addPrimaryKey columnNames="id" constraintName="orders_pkey" tableName="orders"/>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-7">
+        <addUniqueConstraint columnNames="name" constraintName="uk_t8o6pivur7nn124jehx7cygw5" tableName="categories"/>
+    </changeSet>
+    <changeSet author="sunagatovzr" id="1572125875124-8">
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="orders" constraintName="fk4w0qnfg1gsjox5tc0my7cflt" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="categories"/>
+    </changeSet>
+</databaseChangeLog>

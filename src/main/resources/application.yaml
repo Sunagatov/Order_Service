@@ -11,7 +11,10 @@ eureka:
       
 spring:
   application:
-    name: order-service    
+    name: order-service
+  liquibase:
+      enabled: true
+      change-log: classpath:/db/liquibase-changelog.xml
   datasource:
     url: 'jdbc:postgresql://localhost:5432/order'
     username: 'order_account'
@@ -22,7 +25,7 @@ spring:
       maximumPoolSize: 5
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.PostgreSQLDialect'
