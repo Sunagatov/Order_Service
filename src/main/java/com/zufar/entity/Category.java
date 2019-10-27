@@ -26,7 +26,7 @@ public class Category {
     @ApiModelProperty(notes = "Category id", name = "id", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
-    @SequenceGenerator(name = "category_sequence", sequenceName = "category_seq")
+    @SequenceGenerator(name = "category_sequence", sequenceName = "category_seq", allocationSize = 20, initialValue = 5)
     private Long id;
 
     @ApiModelProperty(notes = "Category name", name = "name", required = true)

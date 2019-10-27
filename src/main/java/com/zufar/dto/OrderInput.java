@@ -31,6 +31,6 @@ public class OrderInput {
     private Long categoryId;
 
     @ApiModelProperty(notes = "client id of an order", name = "clientId", required = true)
-    @NotNull(message = "Please provide a client id in a order.")
+    @NotNull(message = "Please provide a client id in a order. It is absent.")
     private Long clientId;
 }

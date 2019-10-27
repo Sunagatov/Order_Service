@@ -30,11 +30,12 @@ import javax.persistence.GenerationType;
 @Table(name = "orders")
 public class Order {
 
-    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq")
     @ApiModelProperty(notes = "Order id", name="id", required=true)
     @Id
+    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 5, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     private Long id;
+
 
     @ApiModelProperty(notes = "Goods name in an order", name="goodsName", required=true)
     @Column(name = "goods_name", length = 160, nullable = false)
