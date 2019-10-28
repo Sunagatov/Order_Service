@@ -32,7 +32,7 @@ public class Order {
 
     @ApiModelProperty(notes = "Order id", name="id", required=true)
     @Id
-    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 5, initialValue = 1)
+    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     private Long id;
 

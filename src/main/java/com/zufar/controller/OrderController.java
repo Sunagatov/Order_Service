@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "View the order list.", response = OrderDTO.class, responseContainer = "List")
-    @GetMapping(value = "all")
+    @GetMapping
     public @ResponseBody ResponseEntity<List<OrderDTO>> getOrders() {
         return new ResponseEntity<>(this.orderService.getAll(), HttpStatus.OK);
     }
@@ -70,8 +70,8 @@ public class OrderController {
     }
 
     @ApiOperation(value = "Delete the orders of the client with given client id.", response = ResponseEntity.class)
-    @DeleteMapping(value = "client/{clientId}")
-    public @ResponseBody ResponseEntity deleteOrders(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @PathVariable Long clientId) {
+    @PostMapping(value = "delete")
+    public @ResponseBody ResponseEntity deleteAllByClientId(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @RequestBody Long clientId) {
         this.orderService.deleteAllByClientId(clientId);
         return ResponseEntity.ok(String.format("The orders of the client with given client id=[%d] were deleted.", clientId));
     }
