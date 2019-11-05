@@ -9,7 +9,7 @@
             <column name="id" valueNumeric="1" type="bigint"/>
             <column name="client_id" value="1" type="bigint"/>
             <column name="goods_name" value="goods_name1" type="VARCHAR(160)"/>
-            <column name="category_id" value="1" type="bigint"/>
+            <column name="category" value="FIRST_CATEGORY" type="VARCHAR(160)"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

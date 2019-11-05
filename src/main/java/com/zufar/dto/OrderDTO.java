@@ -1,27 +1,37 @@
 package com.zufar.dto;
 
+import com.zufar.entity.Category;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "Order")
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+@ApiModel("Order")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class OrderDTO {
 
-    @ApiModelProperty(notes = "Order id", name = "id", required = true)
+    @ApiModelProperty(notes = "Order id", name = "id")
     private Long id;
 
     @ApiModelProperty(notes = "Goods name in an order", name = "goodsName", required = true)
+    @NotEmpty(message = "Please provide a goods name in an order. It is empty.")
+    @NotNull(message = "Please provide a goods name in an order. It is absent.")
+    @Size(min = 5, max = 160, message = "Goods name length in an order should be from 5 to 160.")
     private String goodsName;
 
-    @ApiModelProperty(notes = "Goods category in an order", name = "category_id", required = true)
-    private CategoryDTO category;
+    @ApiModelProperty(notes = "Goods category id in an order", name = "category_id", required = true)
+    @NotNull(message = "Please provide a category id in a order. It is absent.")
+    private Category category;
 
-    @ApiModelProperty(notes = "Client id in an order", name = "clientId", required = true)
+    @ApiModelProperty(notes = "client id of an order", name = "clientId", required = true)
+    @NotNull(message = "Please provide a client id in a order. It is absent.")
     private Long clientId;
 }

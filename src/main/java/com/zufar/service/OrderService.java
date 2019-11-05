@@ -1,10 +1,7 @@
 package com.zufar.service;
 
-import com.zufar.dto.OrderDTO;
-import com.zufar.entity.Category;
 import com.zufar.entity.Order;
-import com.zufar.dto.OrderInput;
-import com.zufar.dto.CategoryDTO;
+import com.zufar.dto.OrderDTO;
 import com.zufar.exception.ClientNotFoundException;
 import com.zufar.exception.InternalServerException;
 import com.zufar.repository.OrderRepository;
@@ -28,15 +25,12 @@ public class OrderService {
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
-    private final CategoryService categoryService;
     private final ClientService clientService;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
-                        CategoryService categoryService,
                         ClientService clientService) {
         this.orderRepository = orderRepository;
-        this.categoryService = categoryService;
         this.clientService = clientService;
     }
 
@@ -60,7 +54,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDTO save(OrderInput order) {
+    public OrderDTO save(OrderDTO order) {
         this.isClientExists(order.getClientId());
         Order orderEntity = convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
@@ -69,7 +63,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDTO update(OrderInput order) {
+    public OrderDTO update(OrderDTO order) {
         this.isClientExists(order.getClientId());
         Order orderEntity = convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
@@ -107,22 +101,20 @@ public class OrderService {
         LOGGER.info(String.format("The orders with client id=[%d] was deleted from a database.", clientId));
     }
 
-    private Order convertToOrder(OrderInput orderDTO) {
-        CategoryDTO category = this.categoryService.getById(orderDTO.getCategoryId());
+    private Order convertToOrder(OrderDTO orderDTO) {
         return new Order(
                 orderDTO.getId(),
                 orderDTO.getGoodsName(),
-                CategoryService.convertCategory(category),
+                orderDTO.getCategory(),
                 orderDTO.getClientId()
         );
     }
 
     private OrderDTO convertToOrderDTO(Order order) {
-        Category category = order.getCategory();
         return new OrderDTO(
                 order.getId(),
                 order.getGoodsName(),
-                CategoryService.convertCategoryDTO(category),
+                order.getCategory(),
                 order.getClientId()
         );
     }

@@ -1,7 +1,6 @@
 package com.zufar.controller;
 
 import com.zufar.dto.OrderDTO;
-import com.zufar.dto.OrderInput;
 import com.zufar.service.OrderService;
 
 import io.swagger.annotations.Api;
@@ -75,7 +74,7 @@ public class OrderController {
 
     @ApiOperation(value = "Save a new order.", response = ResponseEntity.class)
     @PostMapping
-    public @ResponseBody ResponseEntity saveOrder(@ApiParam(value = "An order object which which will be saved.", required = true) @Valid @RequestBody OrderInput order) {
+    public @ResponseBody ResponseEntity saveOrder(@ApiParam(value = "An order object which which will be saved.", required = true) @Valid @RequestBody OrderDTO order) {
         OrderDTO orderEntity = this.orderService.save(order);
         return ResponseEntity.ok(String.format("The order [%s] was saved.", orderEntity));
     }
@@ -83,7 +82,7 @@ public class OrderController {
 
     @ApiOperation(value = "Update an existed order.", response = ResponseEntity.class)
     @PutMapping
-    public @ResponseBody ResponseEntity updateOrder(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @Valid @RequestBody OrderInput order) {
+    public @ResponseBody ResponseEntity updateOrder(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @Valid @RequestBody OrderDTO order) {
         OrderDTO orderEntity = this.orderService.update(order);
         return ResponseEntity.ok(String.format("The order [%s] was updated.", orderEntity));
     }
