@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@Api(value = "Category api",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "Category api")
 @Validated
 @RestController
-@RequestMapping(value = "categories", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "categories")
 public class CategoryController {
 
     private final CategoryService categoryService;

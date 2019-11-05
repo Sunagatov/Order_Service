@@ -29,12 +29,10 @@ import javax.validation.Valid;
 
 import java.util.List;
 
-@Api(value = "Order api",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "Order api")
 @Validated
 @RestController
-@RequestMapping(value = "orders", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "orders")
 public class OrderController {
 
     private final OrderService orderService;
