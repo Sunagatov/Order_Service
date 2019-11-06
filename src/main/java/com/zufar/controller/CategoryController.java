@@ -1,6 +1,6 @@
 package com.zufar.controller;
 
-import com.zufar.entity.Category;
+import com.zufar.dto.Category;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
