@@ -5,11 +5,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet author="orders" id="1572097649881-5">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="orders"/>
+            <runningAs username="order_account"/>
+        </preConditions>
         <insert tableName="orders">
             <column name="id" valueNumeric="1" type="bigint"/>
             <column name="client_id" value="1" type="bigint"/>
             <column name="goods_name" value="goods_name1" type="VARCHAR(160)"/>
             <column name="category" value="FIRST_CATEGORY" type="VARCHAR(160)"/>
         </insert>
+        <rollback/>
     </changeSet>
 </databaseChangeLog>

@@ -2,10 +2,12 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="sunagatovzr" id="1572125875124-2">
-        <createSequence sequenceName="order_seq"/>
-    </changeSet>
+
     <changeSet author="sunagatovzr" id="1572125875124-4">
+        <preConditions>
+            <dbms type="postgresql"/>
+            <runningAs username="order_account"/>
+        </preConditions>
         <createTable tableName="orders">
             <column name="id" type="bigint">
                 <constraints nullable="false"/>
@@ -24,7 +26,26 @@
             <dropTable tableName="orders"/>
         </rollback>
     </changeSet>
+
+    <changeSet author="sunagatovzr" id="1572125875124-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="orders"/>
+            <runningAs username="order_account"/>
+        </preConditions>
+        <createSequence sequenceName="order_seq"/>
+        <rollback>
+            <dropSequence sequenceName="order_seq"/>
+        </rollback>
+    </changeSet>
+
     <changeSet author="sunagatovzr" id="1572125875124-6">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="orders"/>
+            <runningAs username="order_account"/>
+        </preConditions>
         <addPrimaryKey columnNames="id" constraintName="orders_pkey" tableName="orders"/>
+        <rollback>
+            <dropPrimaryKey tableName="orders"/>
+        </rollback>
     </changeSet>
 </databaseChangeLog>
