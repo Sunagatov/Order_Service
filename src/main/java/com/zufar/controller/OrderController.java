@@ -52,6 +52,12 @@ public class OrderController {
         return this.orderService.getAllByClientId(clientId);
     }
 
+    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List")
+    @PostMapping(value = "clients")
+    public @ResponseBody List<OrderDTO> getOrdersByClientIds(@ApiParam(value = "An order client ids which is used to get orders.", required = true) @RequestBody List<Long> clientIds) {
+        return this.orderService.getAllByClientIds(clientIds);
+    }
+
     @ApiOperation(value = "View the order with given order id.", response = OrderDTO.class)
     @GetMapping(value = "/{id}")
     public @ResponseBody ResponseEntity<OrderDTO> getOrder(@ApiParam(value = "An order id which is used to retrieve an order.", required = true) @PathVariable Long id) {

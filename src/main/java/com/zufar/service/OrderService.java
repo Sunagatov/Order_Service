@@ -48,6 +48,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderDTO> getAllByClientIds(List<Long> ids) {
+        LOGGER.info(String.format("Get all orders of client with id=[%s].", ids));
+        return StreamSupport.stream(orderRepository.findAllByClientIdIn(ids).spliterator(), false)
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
     public OrderDTO getById(Long id) {
         LOGGER.info(String.format("Get order with id=[%d]", id));
         return orderRepository.findById(id).map(this::convertToOrderDTO).orElse(null);
