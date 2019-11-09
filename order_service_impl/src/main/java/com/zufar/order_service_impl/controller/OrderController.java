@@ -62,7 +62,7 @@ public class OrderController implements OrderServiceEndPoint {
     @DeleteMapping(value = "client/{clientId}")
     @Override
     @ApiOperation(value = "Delete the orders of the client with given client id.", response = ResponseEntity.class)
-    public @ResponseBody ResponseEntity deleteAllByClientId(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @PathVariable Long clientId) {
+    public @ResponseBody ResponseEntity deleteAllByClientId(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @PathVariable(value = "clientId") Long clientId) {
         this.orderService.deleteAllByClientId(clientId);
         return ResponseEntity.ok(String.format("The orders of the client with given client id=[%d] were deleted.", clientId));
     }

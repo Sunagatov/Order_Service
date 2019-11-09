@@ -21,5 +21,5 @@ public interface OrderClientService {
     @ResponseBody ResponseEntity<List<OrderDTO>> getAllByClientIds(@RequestBody Long... clientIds);
 
     @DeleteMapping(value = "client/{clientId}")
-    @ResponseBody ResponseEntity deleteAllByClientId(@PathVariable Long clientId);
+    @ResponseBody ResponseEntity deleteAllByClientId(@PathVariable(value = "clientId") Long clientId);
 }
