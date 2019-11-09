@@ -41,15 +41,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public List<OrderDTO> getAllByClientId(Long id) {
-        LOGGER.info(String.format("Get all orders of client with id=[%d].", id));
-        return StreamSupport.stream(orderRepository.findAllByClientId(id).spliterator(), false)
-                .map(this::convertToOrderDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<OrderDTO> getAllByClientIds(List<Long> ids) {
-        LOGGER.info(String.format("Get all orders of client with id=[%s].", ids));
+    public List<OrderDTO> getAllByClientIds(Long... ids) {
+        LOGGER.info("Get all orders of clients");
         return StreamSupport.stream(orderRepository.findAllByClientIdIn(ids).spliterator(), false)
                 .map(this::convertToOrderDTO)
                 .collect(Collectors.toList());
