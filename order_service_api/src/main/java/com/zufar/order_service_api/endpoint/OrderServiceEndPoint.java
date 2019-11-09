@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 
 @RequestMapping("/default")
-public interface OrderServiceEndPoint<E extends OrderDTO> {
+public interface OrderServiceEndPoint<E extends OrderDTO, T extends Number> {
 
     /**
      * Returns all orders.
@@ -27,7 +27,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO> {
      * @param clientIds must not be {@literal null}.
      * @return the orders with the given client ids.
      */
-    List<E> getAllByClientIds(Long... clientIds);
+    List<E> getAllByClientIds(T... clientIds);
 
     /**
      * Returns the order with given client id.
@@ -35,7 +35,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO> {
      * @param id must not be {@literal null}.
      * @return the order with the given id.
      */
-    ResponseEntity<E> getById(Long  id);
+    ResponseEntity<E> getById(T  id);
 
 
     /**
@@ -44,7 +44,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO> {
      * @param id must not be {@literal null}.
      * @return the operation info.
      */
-    ResponseEntity deleteById(Long id);
+    ResponseEntity deleteById(T id);
 
     /**
      * Deletes all orders with the given client id.
@@ -52,7 +52,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO> {
      * @param clientId must not be {@literal null}.
      * @return the operation info.
      */
-    ResponseEntity deleteAllByClientId(Long clientId);
+    ResponseEntity deleteAllByClientId(T clientId);
 
     /**
      * Saves the given order.

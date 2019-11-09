@@ -25,7 +25,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(value = "orders")
-public class OrderController implements OrderServiceEndPoint {
+public class OrderController implements OrderServiceEndPoint<OrderDTO, Long> {
 
     private final OrderService orderService;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");

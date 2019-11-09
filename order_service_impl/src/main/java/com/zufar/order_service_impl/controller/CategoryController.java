@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "Category api")
 @RestController
 @RequestMapping(value = "categories")
-public class CategoryController implements CategoryServiceEndPoint {
+public class CategoryController implements CategoryServiceEndPoint<Category> {
 
     @Override
     @GetMapping
