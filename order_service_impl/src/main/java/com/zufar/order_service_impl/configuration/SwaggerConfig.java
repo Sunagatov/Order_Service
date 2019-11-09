@@ -1,4 +1,4 @@
-package com.zufar.order_service.configuration;
+package com.zufar.order_service_impl.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

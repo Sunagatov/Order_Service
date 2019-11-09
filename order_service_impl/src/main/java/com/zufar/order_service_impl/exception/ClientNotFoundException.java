@@ -1,4 +1,4 @@
-package com.zufar.order_service.exception;
+package com.zufar.order_service_impl.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

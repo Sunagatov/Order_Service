@@ -1,23 +1,13 @@
-package com.zufar.order_service.entity;
+package com.zufar.order_service_impl.entity;
 
 import com.zufar.dto.Category;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.EnumType;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 
 @ApiModel(value = "Order")
@@ -30,7 +20,7 @@ public class Order {
 
     @ApiModelProperty(notes = "Order id", name = "id", required = true)
     @Id
-    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     private Long id;
 

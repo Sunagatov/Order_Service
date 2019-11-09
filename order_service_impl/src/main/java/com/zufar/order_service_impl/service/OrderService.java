@@ -1,18 +1,16 @@
-package com.zufar.order_service.service;
+package com.zufar.order_service_impl.service;
 
-import com.zufar.order_service.entity.Order;
 import com.zufar.dto.OrderDTO;
-import com.zufar.order_service.exception.ClientNotFoundException;
-import com.zufar.order_service.exception.InternalServerException;
-import com.zufar.order_service.repository.OrderRepository;
-
-import org.apache.logging.log4j.Logger;
+import com.zufar.order_service_impl.entity.Order;
+import com.zufar.order_service_impl.exception.ClientNotFoundException;
+import com.zufar.order_service_impl.exception.InternalServerException;
+import com.zufar.order_service_impl.repository.OrderRepository;
 import org.apache.logging.log4j.LogManager;
-
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
