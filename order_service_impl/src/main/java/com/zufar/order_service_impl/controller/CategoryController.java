@@ -1,6 +1,6 @@
 package com.zufar.order_service_impl.controller;
 
-import com.zufar.dto.Category;
+import com.zufar.order_management_system_common.dto.Category;
 import com.zufar.order_service_api.endpoint.CategoryServiceEndPoint;
 
 import io.swagger.annotations.Api;

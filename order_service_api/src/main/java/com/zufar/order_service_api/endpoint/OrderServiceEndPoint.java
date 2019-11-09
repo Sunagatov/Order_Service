@@ -1,9 +1,9 @@
 package com.zufar.order_service_api.endpoint;
 
-import com.zufar.dto.OrderDTO;
 
 import java.util.List;
 
+import com.zufar.order_management_system_common.dto.OrderDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,7 +35,8 @@ public interface OrderServiceEndPoint<E extends OrderDTO> {
      * @param id must not be {@literal null}.
      * @return the order with the given id.
      */
-    ResponseEntity<E> getById(Long id);
+    ResponseEntity<E> getById(Long  id);
+
 
     /**
      * Deletes the order with the given id.

@@ -1,10 +1,8 @@
 package com.zufar.order_service_api.client;
 
-
-import com.zufar.dto.OrderDTO;
-
 import java.util.List;
 
+import com.zufar.order_management_system_common.dto.OrderDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

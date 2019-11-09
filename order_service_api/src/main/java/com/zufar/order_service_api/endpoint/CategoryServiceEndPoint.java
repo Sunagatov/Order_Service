@@ -1,7 +1,6 @@
 package com.zufar.order_service_api.endpoint;
 
-import com.zufar.dto.Category;
-
+import com.zufar.order_management_system_common.dto.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 

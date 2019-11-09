@@ -1,6 +1,7 @@
 package com.zufar.order_service_impl.controller;
 
-import com.zufar.dto.OrderDTO;
+import com.zufar.order_management_system_common.dto.OperationResult;
+import com.zufar.order_management_system_common.dto.OrderDTO;
 import com.zufar.order_service_api.endpoint.OrderServiceEndPoint;
 import com.zufar.order_service_impl.service.OrderService;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Api(value = "Order api")
@@ -25,8 +28,9 @@ import java.util.List;
 public class OrderController implements OrderServiceEndPoint {
 
     private final OrderService orderService;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
 
-    @Autowired 
+    @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
@@ -34,14 +38,15 @@ public class OrderController implements OrderServiceEndPoint {
     @GetMapping
     @Override
     @ApiOperation(value = "View the order list.", response = OrderDTO.class, responseContainer = "List")
-    public @ResponseBody List<OrderDTO> getAll() {
+    public @ResponseBody
+    List<OrderDTO> getAll() {
         return this.orderService.getAll();
     }
 
     @PostMapping(value = "clients")
     @Override
-    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List")
-    public @ResponseBody List<OrderDTO> getAllByClientIds(@ApiParam(value = "An order client ids which is used to get orders.", required = true) @RequestBody Long... clientIds) {
+    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List") public @ResponseBody
+    List<OrderDTO> getAllByClientIds(@ApiParam(value = "An order client ids which is used to get orders.", required = true) @RequestBody Long... clientIds) {
         return this.orderService.getAllByClientIds(clientIds);
     }
 
@@ -56,7 +61,12 @@ public class OrderController implements OrderServiceEndPoint {
     @ApiOperation(value = "Delete the order with given order id.", response = ResponseEntity.class)
     public @ResponseBody ResponseEntity deleteById(@ApiParam(value = "An order id which is used to delete an order.", required = true) @PathVariable Long id) {
         this.orderService.deleteById(id);
-        return ResponseEntity.ok(String.format("The order with the given order id=[%d] was deleted.", id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(OperationResult.builder()
+                        .timestamp(LocalDateTime.now().format(formatter))
+                        .message(String.format("The order with the given order id=[%d] was deleted.", id))
+                        .status(HttpStatus.OK.toString())
+                        .build());
     }
 
     @DeleteMapping(value = "client/{clientId}")
@@ -64,22 +74,37 @@ public class OrderController implements OrderServiceEndPoint {
     @ApiOperation(value = "Delete the orders of the client with given client id.", response = ResponseEntity.class)
     public @ResponseBody ResponseEntity deleteAllByClientId(@ApiParam(value = "A client id which is used to delete orders of specific client.", required = true) @PathVariable(value = "clientId") Long clientId) {
         this.orderService.deleteAllByClientId(clientId);
-        return ResponseEntity.ok(String.format("The orders of the client with given client id=[%d] were deleted.", clientId));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(OperationResult.builder()
+                        .timestamp(LocalDateTime.now().format(formatter))
+                        .message(String.format("The orders of the client with given client id=[%d] were deleted.", clientId))
+                        .status(HttpStatus.OK.toString())
+                        .build());
     }
 
     @PostMapping
     @Override
     @ApiOperation(value = "Save a new order.", response = ResponseEntity.class)
     public @ResponseBody ResponseEntity save(@ApiParam(value = "An order object which which will be saved.", required = true) @NotNull @Valid @RequestBody OrderDTO order) {
-        OrderDTO orderEntity = this.orderService.save(order);
-        return ResponseEntity.ok(String.format("The order [%s] was saved.", orderEntity));
+        OrderDTO savedOrder = this.orderService.save(order);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(OperationResult.builder()
+                        .timestamp(LocalDateTime.now().format(formatter))
+                        .message((String.format("The order [%s] was saved.", savedOrder)))
+                        .status(HttpStatus.CREATED.toString())
+                        .build());
     }
 
     @PutMapping
     @Override
     @ApiOperation(value = "Update an existed order.", response = ResponseEntity.class)
-    public @ResponseBody ResponseEntity update(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @NotNull @Valid  @RequestBody OrderDTO order) {
-        OrderDTO orderEntity = this.orderService.update(order);
-        return ResponseEntity.ok(String.format("The order [%s] was updated.", orderEntity));
+    public @ResponseBody ResponseEntity update(@ApiParam(value = "An order object which will be used to update an existed order.", required = true) @NotNull @Valid @RequestBody OrderDTO order) {
+        OrderDTO updatedOrder = this.orderService.update(order);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(OperationResult.builder()
+                        .timestamp(LocalDateTime.now().format(formatter))
+                        .message((String.format("The order [%s] was updated.", updatedOrder)))
+                        .status(HttpStatus.OK.toString())
+                        .build());
     }
 }

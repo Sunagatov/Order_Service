@@ -1,6 +1,6 @@
 package com.zufar.order_service_impl.entity;
 
-import com.zufar.dto.Category;
+import com.zufar.order_management_system_common.dto.Category;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

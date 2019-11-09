@@ -1,9 +1,10 @@
 package com.zufar.order_service_impl.service;
 
-import com.zufar.dto.OrderDTO;
+import com.zufar.order_management_system_common.dto.OrderDTO;
+import com.zufar.order_management_system_common.exception.ClientNotFoundException;
+import com.zufar.order_management_system_common.exception.InternalServerException;
+import com.zufar.order_management_system_common.exception.OrderNotFoundException;
 import com.zufar.order_service_impl.entity.Order;
-import com.zufar.order_service_impl.exception.ClientNotFoundException;
-import com.zufar.order_service_impl.exception.InternalServerException;
 import com.zufar.order_service_impl.repository.OrderRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,7 @@ public class OrderService {
 
     @Transactional
     public OrderDTO save(OrderDTO order) {
-        this.isClientExists(order.getClientId());
+        this.isClientExists(order.getClientId(), String.format("It is impossible to save the order = [%s].", order));
         Order orderEntity = convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         LOGGER.info(String.format("Order=[%s] was saved in a database successfully.", orderEntity));
@@ -62,26 +63,13 @@ public class OrderService {
 
     @Transactional
     public OrderDTO update(OrderDTO order) {
-        this.isClientExists(order.getClientId());
+        String errorMessage = String.format("It is impossible to update the order = [%s].", order);
+        isOrderExists(order.getId(), errorMessage);
+        this.isClientExists(order.getClientId(), "It is impossible to update the order.");
         Order orderEntity = convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         LOGGER.info(String.format("Order=[%s] was updated in a database successfully.", orderEntity));
         return convertToOrderDTO(orderEntity);
-    }
-
-    private void isClientExists(Long clientId) {
-        ResponseEntity<Boolean> result = this.clientService.isClientExists(clientId);
-        if (result == null || result.getBody() == null || result.getStatusCode() != HttpStatus.OK) {
-            String errorMessage = String.format("There is no info about client with id=[%d].", clientId);
-            LOGGER.error(errorMessage);
-            throw new InternalServerException(errorMessage);
-        }
-        if (!result.getBody()) {
-            String errorMessage = String.format("There is no client with id=[%d].", clientId);
-            LOGGER.error(errorMessage);
-            throw new ClientNotFoundException(errorMessage);
-        }
-        LOGGER.info(String.format("There is client with id=[%d].", clientId));
     }
 
     public void deleteById(Long id) {
@@ -97,6 +85,29 @@ public class OrderService {
         }
         this.orderRepository.deleteAllByClientId(clientId);
         LOGGER.info(String.format("The orders with client id=[%d] was deleted from a database.", clientId));
+    }
+
+    private void isOrderExists(Long orderId, String errorMessage) {
+        if (!this.orderRepository.existsById(orderId)) {
+            String fullErrorMessage = errorMessage + String.format("Order with id=[%d] was not found.", orderId);
+            LOGGER.error(fullErrorMessage);
+            throw new OrderNotFoundException(fullErrorMessage);
+        }
+    }
+
+    private void isClientExists(Long clientId, String errorMessage) {
+        ResponseEntity<Boolean> result = this.clientService.isClientExists(clientId);
+        if (result == null || result.getBody() == null || result.getStatusCode() != HttpStatus.OK) {
+            String fullErrorMessage = errorMessage + String.format("There is no info about client with id=[%d].", clientId);
+            LOGGER.error(fullErrorMessage);
+            throw new InternalServerException(fullErrorMessage);
+        }
+        if (!result.getBody()) {
+            String fullErrorMessage = errorMessage + String.format("There is no client with id=[%d].", clientId);
+            LOGGER.error(fullErrorMessage);
+            throw new ClientNotFoundException(fullErrorMessage);
+        }
+        LOGGER.info(String.format("There is client with id=[%d].", clientId));
     }
 
     private Order convertToOrder(OrderDTO orderDTO) {
