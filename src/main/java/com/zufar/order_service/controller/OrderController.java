@@ -1,8 +1,8 @@
-package com.zufar.controller;
+package com.zufar.order_service.controller;
 
-import com.zufar.api.OrderServiceEndPoint;
+import com.zufar.order_service.api.OrderServiceEndPoint;
 import com.zufar.dto.OrderDTO;
-import com.zufar.service.OrderService;
+import com.zufar.order_service.service.OrderService;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.zufar.controller;
+package com.zufar.order_service.controller;
 
 import com.zufar.dto.Category;
-import com.zufar.api.CategoryServiceEndPoint;
+import com.zufar.order_service.api.CategoryServiceEndPoint;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

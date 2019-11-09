@@ -1,4 +1,4 @@
-package com.zufar.service;
+package com.zufar.order_service.service;
 
 
 import org.springframework.cloud.openfeign.FeignClient;

@@ -1,4 +1,4 @@
-package com.zufar.api;
+package com.zufar.order_service.api;
 
 import com.zufar.dto.OrderDTO;
 

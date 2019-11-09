@@ -1,4 +1,4 @@
-package com.zufar.entity;
+package com.zufar.order_service.entity;
 
 import com.zufar.dto.Category;
 
