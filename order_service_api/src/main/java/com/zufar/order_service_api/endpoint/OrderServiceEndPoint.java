@@ -19,7 +19,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO, T extends Number> {
      *
      * @return all orders.
      */
-    List<E> getAll();
+    ResponseEntity<List<E>> getAll();
 
     /**
      * Returns all orders with given client ids.
@@ -27,7 +27,7 @@ public interface OrderServiceEndPoint<E extends OrderDTO, T extends Number> {
      * @param clientIds must not be {@literal null}.
      * @return the orders with the given client ids.
      */
-    List<E> getAllByClientIds(T... clientIds);
+    ResponseEntity<List<E>> getAllByClientIds(T... clientIds);
 
     /**
      * Returns the order with given client id.

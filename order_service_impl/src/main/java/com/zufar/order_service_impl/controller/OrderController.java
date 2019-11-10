@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping(value = "orders")
 public class OrderController implements OrderServiceEndPoint<OrderDTO, Long> {
 
-    private final OrderService orderService;
+    private OrderService orderService;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
 
     @Autowired
@@ -38,16 +38,15 @@ public class OrderController implements OrderServiceEndPoint<OrderDTO, Long> {
     @GetMapping
     @Override
     @ApiOperation(value = "View the order list.", response = OrderDTO.class, responseContainer = "List")
-    public @ResponseBody
-    List<OrderDTO> getAll() {
-        return this.orderService.getAll();
+    public @ResponseBody ResponseEntity<List<OrderDTO>> getAll() {
+        return new ResponseEntity<>(this.orderService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping(value = "clients")
     @Override
-    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List") public @ResponseBody
-    List<OrderDTO> getAllByClientIds(@ApiParam(value = "An order client ids which is used to get orders.", required = true) @RequestBody Long... clientIds) {
-        return this.orderService.getAllByClientIds(clientIds);
+    @ApiOperation(value = "View the order list with given order ids.", response = OrderDTO.class, responseContainer = "List") 
+    public @ResponseBody ResponseEntity<List<OrderDTO>> getAllByClientIds(@ApiParam(value = "An order client ids which is used to get orders.", required = true) @RequestBody Long... clientIds) {
+        return new ResponseEntity<>(this.orderService.getAllByClientIds(clientIds), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
