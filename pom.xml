@@ -3,11 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
-    <modules>
-        <module>order_service_api</module>
-        <module>order_service_impl</module>
-    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,13 +10,18 @@
         <version>2.0.1.RELEASE</version>
         <relativePath/>
     </parent>
+    
+    <modules>
+        <module>order_service_api</module>
+        <module>order_service_impl</module>
+    </modules>
 
     <groupId>com.zufar</groupId>
     <artifactId>order_service</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+    
     <description>Order microservice provides reference information about orders.</description>
-
     <name>Order_Service</name>
 
     <developers>
@@ -46,8 +46,8 @@
         <maven.repository.url>https://github.com/Sunagatov/Order_Service</maven.repository.url>
         <!--                                               Maven properties                                          -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <build>
@@ -55,6 +55,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
