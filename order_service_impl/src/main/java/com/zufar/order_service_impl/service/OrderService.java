@@ -1,9 +1,11 @@
 package com.zufar.order_service_impl.service;
 
+import com.zufar.client_service_api.client.ClientFeignService;
 import com.zufar.order_management_system_common.dto.OrderDTO;
 import com.zufar.order_management_system_common.exception.ClientNotFoundException;
 import com.zufar.order_management_system_common.exception.InternalServerException;
 import com.zufar.order_management_system_common.exception.OrderNotFoundException;
+import com.zufar.order_service_impl.converter.OrderConverter;
 import com.zufar.order_service_impl.entity.Order;
 import com.zufar.order_service_impl.repository.OrderRepository;
 import org.apache.logging.log4j.LogManager;
@@ -18,17 +20,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.zufar.order_service_impl.converter.OrderConverter.convertToOrder;
+import static com.zufar.order_service_impl.converter.OrderConverter.convertToOrderDTO;
+
 @Service
 public class OrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
-    private final ClientService clientService;
+    private final ClientFeignService clientService;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
-                        ClientService clientService) {
+                        ClientFeignService clientService) {
         this.orderRepository = orderRepository;
         this.clientService = clientService;
     }
@@ -36,20 +41,20 @@ public class OrderService {
     public List<OrderDTO> getAll() {
         LOGGER.info("Get all orders.");
         return StreamSupport.stream(orderRepository.findAll().spliterator(), false)
-                .map(this::convertToOrderDTO)
+                .map(OrderConverter::convertToOrderDTO)
                 .collect(Collectors.toList());
     }
 
     public List<OrderDTO> getAllByClientIds(Long... ids) {
         LOGGER.info("Get all orders of clients");
         return StreamSupport.stream(orderRepository.findAllByClientIdIn(ids).spliterator(), false)
-                .map(this::convertToOrderDTO)
+                .map(OrderConverter::convertToOrderDTO)
                 .collect(Collectors.toList());
     }
 
     public OrderDTO getById(Long id) {
         LOGGER.info(String.format("Get order with id=[%d]", id));
-        return orderRepository.findById(id).map(this::convertToOrderDTO).orElse(null);
+        return orderRepository.findById(id).map(OrderConverter::convertToOrderDTO).orElse(null);
     }
 
     @Transactional
@@ -108,23 +113,5 @@ public class OrderService {
             throw new ClientNotFoundException(fullErrorMessage);
         }
         LOGGER.info(String.format("There is client with id=[%d].", clientId));
-    }
-
-    private Order convertToOrder(OrderDTO orderDTO) {
-        return new Order(
-                orderDTO.getId(),
-                orderDTO.getGoodsName(),
-                orderDTO.getCategory(),
-                orderDTO.getClientId()
-        );
-    }
-
-    private OrderDTO convertToOrderDTO(Order order) {
-        return new OrderDTO(
-                order.getId(),
-                order.getGoodsName(),
-                order.getCategory(),
-                order.getClientId()
-        );
     }
 }
