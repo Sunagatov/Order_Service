@@ -101,7 +101,7 @@ public class OrderService {
     }
 
     private void isClientExists(Long clientId, String errorMessage) {
-        ResponseEntity<Boolean> result = this.clientService.isClientExists(clientId);
+        ResponseEntity<Boolean> result = this.clientService.isExists(clientId);
         if (result == null || result.getBody() == null || result.getStatusCode() != HttpStatus.OK) {
             String fullErrorMessage = errorMessage + String.format("There is no info about client with id=[%d].", clientId);
             LOGGER.error(fullErrorMessage);
